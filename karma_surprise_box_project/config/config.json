@@ -1,10 +1,13 @@
 {
   "reward_probability_threshold": 0.6,
   "karma_min": 5,
-  "karma_max": 30,
-  "reward_rules": {
+  "karma_max": 80,
+  "reward_rules" : {
     "streak": ["login_streak >= 3", "quizzes_completed >= 1"],
     "engagement": ["upvotes_received >= 10"],
-    "social": ["karma_spent >= 25"]
-  }
+    "social": ["karma_spent >= 25"],
+    "comeback": ["login_streak == 1", "posts_created >= 2"],
+    "mystery": ["karma_earned >= 15", "posts_created >= 2"],
+    "allrounder": ["login_streak >= 3", "posts_created >= 5", "quizzes_completed >= 2", "upvotes_received >= 8"]
+}
 }
