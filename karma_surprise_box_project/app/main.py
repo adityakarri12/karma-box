@@ -22,21 +22,23 @@ class SurpriseRequest(BaseModel):
     user_id: str
     date: str
     daily_metrics: DailyMetrics
-
 @app.post("/check-surprise-box")
 def check_surprise_box(req: SurpriseRequest):
     f = req.daily_metrics.dict()
-    surprise_unlocked = predict_surprise(f)
+    predicted = predict_surprise(f)
+    karma = abs(f["karma_earned"] - f["karma_spent"])
+
+    # Enforce business rule: minimum karma to unlock a surprise box
+    karma_threshold = 5
+    surprise_unlocked = predicted and karma >= karma_threshold and (not f["spam"])
 
     if surprise_unlocked:
         box_type = determine_box_type(f)
-        karma = abs(f["karma_earned"] - f["karma_spent"])
-        reason = generate_reason(karma,f, box_type)
+        reason = generate_reason(karma, f, box_type)
         rarity = determine_rarity(karma, box_type, f)
     else:
         box_type = ""
-        reason = "spam" if f["spam"] else "low_karma_diff"
-        karma = 0
+        reason = "spam" if f["spam"] else "low_reward_karma"
         rarity = ""
 
     return {
@@ -57,3 +59,7 @@ def health():
 def version():
     with open("app/version.txt") as f:
         return {"version": f.read().strip()}
+
+@app.get("/")
+def root():
+    return {"message": "Karma Box is running. Visit /docs for the API documentation."}
