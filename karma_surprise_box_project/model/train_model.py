@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
+from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 import joblib
 
 df = pd.read_csv("data/karma_surprise_box_dataset.csv")
@@ -26,6 +27,18 @@ y_pred = model.predict(X_test)
 # Print accuracy
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model Accuracy: {accuracy:.4f}")
+
+# Print evaluation metrics
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall:    {recall:.4f}")
+print(f"F1 Score:  {f1:.4f}")
+print("Confusion Matrix:")
+print(conf_matrix)
 
 print("Evaluation Report:")
 print(classification_report(y_test, y_pred))
